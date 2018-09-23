@@ -78,20 +78,21 @@ verifyAgainstHugeInteger(T a, U b)
   auto sa = a;
   auto sb = b;
 #endif
-  //less than
+  // less than
   REQUIRE((sa < sb) == (A < B));
   REQUIRE((sb < sa) == (B < A));
 
-  //less or equal than
-  bool test_pass= (sa <= sb) == (A <= B) ;
-  if(!test_pass) {
+  // less or equal than
+  bool test_pass = (sa <= sb) == (A <= B);
+  if (!test_pass) {
     std::ostringstream oss;
-    oss<<"safe "<< type_name<T>()<<"{"<<+a<<"} <= safe "<<type_name<U>()<<"{"<<+b<<"}"<<" is "<< (sa <= sb)<<", but should be "<< (A <= B);
+    oss << "safe " << type_name<T>() << "{" << +a << "} <= safe "
+        << type_name<U>() << "{" << +b << "}"
+        << " is " << (sa <= sb) << ", but should be " << (A <= B);
     CHECK_THAT(oss.str(), Catch::Matchers::Equals("<--- read error message"));
   }
-  REQUIRE((sa <= sb) == (A <= B));//std::string(type_name<T>())!="");
+  REQUIRE((sa <= sb) == (A <= B)); // std::string(type_name<T>())!="");
   REQUIRE((sb <= sa) == (B <= A));
-
 }
 
 /**
