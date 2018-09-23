@@ -1,0 +1,25 @@
+#based on https://stackoverflow.com/questions/51809739/setting-up-travis-ci-with-cmake-c17-project/51812628#51812628
+# License: CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/
+#
+language: cpp
+compiler: gcc
+
+os: linux
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-7
+
+script:
+  - mkdir -p build/catch
+  - cd build
+  - curl https://raw.githubusercontent.com/catchorg/Catch2/v2.2.3/single_include/catch.hpp > catch/catch.hpp
+  - export CC=gcc-7
+  - export CXX=g++-7
+  - export CXXFLAGS="-I $(pwd)"
+  - cmake ..
+  - make
+  - make test
+
