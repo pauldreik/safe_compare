@@ -1,6 +1,8 @@
 # safe_compare
 This is a C++14 library for safe C++ integer comparisons.
 
+[![Build Status](https://travis-ci.com/pauldreik/safe_compare.svg?branch=master)](https://travis-ci.com/pauldreik/safe_compare)
+
 # Motivation
 The following C++ program is not mathematically correct.
 ```
