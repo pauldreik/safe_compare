@@ -10,6 +10,7 @@
 #include "safe_compare/safe_compare.hpp"
 #include <array>
 #include <iostream>
+#include <sstream>
 
 #include "static_for.hpp"
 #include "type_name_helper.hpp"
