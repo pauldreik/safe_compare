@@ -37,7 +37,9 @@ make
 ```
 You can also install the library, using the conventional cmake mechanism to specify the install dir. For a default system wide install, ```make install``` should do the trick.
 
-#License
+Running the unit tests require C++17 and either a compiler that supports __int128 (like gcc and clang on x86-64) or that boost is installed, in which case boost multiprecision is used. 
+
+# License
 The library uses several licenses. The relevant part of the library (what you would use in other projects) uses dual licensing. Pick the one you prefer:
 
   * Boost 1.0
