@@ -88,7 +88,6 @@ verifyAgainstHugeInteger(T a, U b)
     std::ostringstream oss;
     oss<<"safe "<< type_name<T>()<<"{"<<+a<<"} <= safe "<<type_name<U>()<<"{"<<+b<<"}"<<" is "<< (sa <= sb)<<", but should be "<< (A <= B);
     CHECK_THAT(oss.str(), Catch::Matchers::Equals("<--- read error message"));
-//  CHECK_THAT(std::string(type_name<T>()) + " <= " + std::string(type_name<U>()), Catch::Matchers::Equals(" <--- this is what failed"));
   }
   REQUIRE((sa <= sb) == (A <= B));//std::string(type_name<T>())!="");
   REQUIRE((sb <= sa) == (B <= A));

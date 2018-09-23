@@ -64,12 +64,12 @@ operator<=(const Value<Integer1>& left, const Value<Integer2>& right)
 
   if (Value<Integer1>::is_signed) {
     // left is signed - right is unsigned. careful check needed.
-    return left.m_value < 0 ||
-           detail::make_unsigned(left.m_value) < right.m_value;
+    return left.m_value <= 0 ||
+           detail::make_unsigned(left.m_value) <= right.m_value;
   } else {
     // left is unsigned - right is signed. careful check needed.
     return right.m_value >= 0 &&
-           left.m_value < detail::make_unsigned(right.m_value);
+           left.m_value <= detail::make_unsigned(right.m_value);
   }
 }
 
