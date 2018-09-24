@@ -81,7 +81,6 @@ verifyAgainstHugeInteger(T a, U b)
 #endif
   // less than
   REQUIRE((sa < sb) == (A < B));
-  REQUIRE((sb < sa) == (B < A));
 
   // less or equal than
   if constexpr (verbose) {
@@ -95,7 +94,6 @@ verifyAgainstHugeInteger(T a, U b)
     }
   }
   REQUIRE((sa <= sb) == (A <= B));
-  REQUIRE((sb <= sa) == (B <= A));
 
   // greater than
   if constexpr (verbose) {
@@ -105,7 +103,6 @@ verifyAgainstHugeInteger(T a, U b)
               << '\n';
   }
   REQUIRE((sa > sb) == (A > B));
-  REQUIRE((sb > sa) == (B > A));
 }
 
 /**
@@ -205,13 +202,11 @@ TEST_CASE("all combinations of fundamental integer types")
   using all_fundamental =
     decltype(std::tuple_cat(fundamental_chars{}, fundamental_ints{}));
 
-  // create all combinations of types (unsigned/signed versions of each, as well
-  // as tests with the types swapped, will be created internally later on)
+  // create all combinations of types (unsigned/signed versions of each will be
+  // created internally later on)
   static_foreach(all_fundamental{}, [&](std::size_t i, auto dummy1) {
     static_foreach(all_fundamental{}, [&](std::size_t j, auto dummy2) {
-      if (j <= i) {
-        testTypePair(dummy1, dummy2);
-      }
+      testTypePair(dummy1, dummy2);
     });
   });
 }
