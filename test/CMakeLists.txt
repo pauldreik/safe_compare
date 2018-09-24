@@ -4,11 +4,19 @@
 # at your option).
 # By Paul Dreik 20180923
 
+option(VERBOSE_UNITTESTS "enables more verbose printouts during unit tests" Off)
+
 set(source_files
    main.cpp
    test.cpp)
       
 add_executable(safe_compare_test ${source_files})
+
+if(VERBOSE_UNITTESTS)
+   target_compile_definitions(safe_compare_test PRIVATE SAFE_COMPARE_VERBOSE_UNITTESTS=1)
+else()
+   target_compile_definitions(safe_compare_test PRIVATE SAFE_COMPARE_VERBOSE_UNITTESTS=0)
+endif()
 
 #we want to carry out the tests with a native type that can hold all
 #builtin integer types. on gcc and clang, there is the __int128 type

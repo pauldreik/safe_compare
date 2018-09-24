@@ -38,7 +38,7 @@
 
 namespace {
 // verbose printout of what happens
-constexpr bool verbose = false;
+constexpr const bool verbose = SAFE_COMPARE_VERBOSE_UNITTESTS;
 }
 
 /**
@@ -84,16 +84,28 @@ verifyAgainstHugeInteger(T a, U b)
   REQUIRE((sb < sa) == (B < A));
 
   // less or equal than
-  bool test_pass = (sa <= sb) == (A <= B);
-  if (!test_pass) {
+  if constexpr (verbose) {
+    const bool test_pass = (sa <= sb) == (A <= B);
     std::ostringstream oss;
     oss << "safe " << type_name<T>() << "{" << +a << "} <= safe "
         << type_name<U>() << "{" << +b << "}"
-        << " is " << (sa <= sb) << ", but should be " << (A <= B);
-    CHECK_THAT(oss.str(), Catch::Matchers::Equals("<--- read error message"));
+        << " is " << (sa <= sb) << " and the true answer is " << (A <= B);
+    if (!test_pass) {
+      CHECK_THAT(oss.str(), Catch::Matchers::Equals("<--- read error message"));
+    }
   }
-  REQUIRE((sa <= sb) == (A <= B)); // std::string(type_name<T>())!="");
+  REQUIRE((sa <= sb) == (A <= B));
   REQUIRE((sb <= sa) == (B <= A));
+
+  // greater than
+  if constexpr (verbose) {
+    std::cout << "safe " << type_name<T>() << "{" << +a << "} > safe "
+              << type_name<U>() << "{" << +b << "}"
+              << " is " << (sa > sb) << " and the true answer is " << (A > B)
+              << '\n';
+  }
+  REQUIRE((sa > sb) == (A > B));
+  REQUIRE((sb > sa) == (B > A));
 }
 
 /**
