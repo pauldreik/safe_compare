@@ -10,7 +10,7 @@
 #pragma once
 
 #include <tuple>
-
+#include <cstddef>
 
 struct fundamental_types {
   // see https://en.cppreference.com/w/cpp/language/types for a list

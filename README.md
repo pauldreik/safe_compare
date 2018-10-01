@@ -29,6 +29,35 @@ bool doit() {
 ```
 This is now mathematically correct. The example may look contrived, but happens quite often. A realistic example is when using int for lengths, then comparing against .size() from an STL container, like std::vector. Those use size_t, which is unsigned.
 
+# Supported operations
+The library only supports builtin integer types (by design). As of C++17, these are
+
+  * char
+  * signed char
+  * unsigned char
+  * wchar_t
+  * char16_t
+  * char32_t
+  * short
+  * int
+  * long
+  * long long.
+
+and unsigned/signed variants of those, where applicable.
+
+Using it with some other type is a compile time error.
+
+The supported operations are
+
+  * ```<```
+  * ```<=```
+  * ```>```
+  * ```>=```
+  * ```==```
+  * ```!=```
+
+There are unit tests testing all combinations of types and operations listed above, on interesting values like min, max, zero, &plusmn;.
+
 # Building and using the library
 This is a header only library. The library uses CMake. Here is how to build the unit tests on Linux.
 ```
@@ -42,6 +71,8 @@ You can also install the library, using the conventional cmake mechanism to spec
 Running the unit tests require C++17 and either a compiler that supports __int128 (like gcc and clang on x86-64) or that boost is installed, in which case boost multiprecision is used. 
 
 # License
+The TL;DR version: you can use the primary library headers commercially if you want, under the Boost 1.0 License.
+
 The library uses several licenses. The relevant part of the library (what you would use in other projects) uses dual licensing. Pick the one you prefer:
 
   * Boost 1.0

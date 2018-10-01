@@ -8,6 +8,8 @@
 #include <limits>
 #include <type_traits>
 
+#include "safe_compare/detail/detail.hpp"
+
 namespace safe_compare {
 
 template<class Integer,
@@ -176,4 +178,20 @@ make_safe(Integer x)
 {
   return Value<Integer>{ x };
 }
+
+///prohibit using bool
+safe_compare::detail::illegal_use_of_bool_as_integer
+make_safe(bool) =delete;
+
+///prohibit using float
+safe_compare::detail::illegal_use_of_float_as_integer
+make_safe(float) =delete;
+
+///prohibit using double
+safe_compare::detail::illegal_use_of_double_as_integer
+make_safe(double) =delete;
+
+///prohibit using long double
+safe_compare::detail::illegal_use_of_long_double_as_integer
+make_safe(long double) =delete;
 } //namespace safe_compare

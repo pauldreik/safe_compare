@@ -176,3 +176,12 @@ TEST_CASE("library demonstration")
   unsigned b = 1;
   REQUIRE(safe_compare::make_safe(a) < safe_compare::make_safe(b));
 }
+
+TEST_CASE("using bool should not compile")
+{
+  int a = -1;
+  bool b = 1;
+  // REQUIRE(safe_compare::make_safe(a) < safe_compare::make_safe(b));
+  // ... unless forcing it to be an int.
+  REQUIRE(safe_compare::make_safe(a) < safe_compare::make_safe(+b));
+}
