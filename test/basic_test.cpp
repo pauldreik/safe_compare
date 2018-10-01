@@ -81,6 +81,7 @@ verifyAgainstHugeInteger(T a, U b)
   REQUIRE((sa > sb) == (A > B));
   REQUIRE((sa >= sb) == (A >= B));
   REQUIRE((sa == sb) == (A == B));
+  REQUIRE((sa != sb) == (A != B));
 }
 
 /**
