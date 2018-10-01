@@ -1,6 +1,6 @@
 /*
  * This is a file for compile time display of a types.
- * By Howard Hinnant, taken from
+ * Based on original by Howard Hinnant and others, taken from
  * https://stackoverflow.com/questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c/20170989#20170989
  *
  * License: CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/
@@ -10,6 +10,10 @@
 
 #include <string_view>
 
+/**
+ * makes the name, with the type given as a template parameter.
+ * @return
+ */
 template<class T>
 constexpr std::string_view
 type_name()
@@ -31,4 +35,13 @@ type_name()
 #endif
 }
 
-
+/**
+ * creates name when one has an instance of the type.
+ * @param
+ * @return
+ */
+template<class T>
+constexpr std::string_view
+type_name(const T&) {
+  return type_name<T>();
+}

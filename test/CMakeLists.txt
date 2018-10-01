@@ -7,8 +7,8 @@
 option(VERBOSE_UNITTESTS "enables more verbose printouts during unit tests" Off)
 
 set(source_files
-   main.cpp
-   test.cpp)
+   unittest_main.cpp
+   basic_test.cpp)
       
 add_executable(safe_compare_test ${source_files})
 

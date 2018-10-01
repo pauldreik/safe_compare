@@ -12,6 +12,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "fundamental_types.hpp"
 #include "static_for.hpp"
 #include "type_name_helper.hpp"
 
@@ -24,21 +25,14 @@
 #else
 #error "no 128 bit integer types available"
 #endif
-/*
- * TODO: templatize the 128 bit version
- * expand to also has <=,>, >=, !=
- * use an implicit constructor?
- * static assert the type is trivial?
- * constexpr?
- * check the assembly?
- * what should happen on a failed check?
- * exploiting narrowing conversion - use language reules? see
- * https://en.cppreference.com/w/cpp/language/list_initialization
- */
 
 namespace {
 // verbose printout of what happens
 constexpr const bool verbose = SAFE_COMPARE_VERBOSE_UNITTESTS;
+
+// column width
+const auto CW = std::setw(22);
+const auto left = std::left;
 }
 
 /**
@@ -68,41 +62,21 @@ verifyAgainstHugeInteger(T a, U b)
   const HugeSignedInteger A{ a };
   const HugeSignedInteger B{ b };
 
-#if 1
   // this should work mathematically correct
   const auto sa = safe_compare::make_safe(a);
   const auto sb = safe_compare::make_safe(b);
-#else
-  // this fails for unsigned/signed combinations! (normal c++ arithmetic)
-  // which demonstrates the problem this library tries to solve in the first
-  // place (mathematically incorrect comparisons).
-  auto sa = a;
-  auto sb = b;
-#endif
-  // less than
-  REQUIRE((sa < sb) == (A < B));
 
-  // less or equal than
   if constexpr (verbose) {
-    const bool test_pass = (sa <= sb) == (A <= B);
     std::ostringstream oss;
-    oss << "safe " << type_name<T>() << "{" << +a << "} <= safe "
-        << type_name<U>() << "{" << +b << "}"
-        << " is " << (sa <= sb) << " and the true answer is " << (A <= B);
-    if (!test_pass) {
-      CHECK_THAT(oss.str(), Catch::Matchers::Equals("<--- read error message"));
-    }
+    oss << CW << left << type_name<T>() << " compared to " << CW << left
+        << type_name<U>() << "  " << CW << left << +a << "  @  " << CW << left
+        << +b;
+    std::cout << "Studying " << oss.str() << '\n';
   }
+  REQUIRE((sa < sb) == (A < B));
   REQUIRE((sa <= sb) == (A <= B));
-
-  // greater than
-  if constexpr (verbose) {
-    std::cout << "safe " << type_name<T>() << "{" << +a << "} > safe "
-              << type_name<U>() << "{" << +b << "}"
-              << " is " << (sa > sb) << " and the true answer is " << (A > B)
-              << '\n';
-  }
   REQUIRE((sa > sb) == (A > B));
+  // REQUIRE((sa >= sb) == (A >= B));
 }
 
 /**
@@ -144,6 +118,13 @@ verifyBasicMath()
 #error "no 128 bit type available"
 #endif
 
+  if constexpr (verbose) {
+    std::ostringstream oss;
+    oss << CW << type_name<T>() << " compared to " << CW << type_name<U>()
+        << '\n';
+    INFO("Studying " << oss.str());
+  }
+
   // make some interesting numbers and test them pairwise
   constexpr const auto some_T = makeInteresting<T>();
   constexpr const auto some_U = makeInteresting<U>();
@@ -154,32 +135,16 @@ verifyBasicMath()
   }
 }
 
-TEST_CASE("most common problematic type combinations")
-{
-  // the most common problem (for me)
-  verifyBasicMath<int, std::size_t>();
-  // common pitfall
-  verifyBasicMath<int, unsigned int>();
-}
-
 template<class T, class U>
 void
 testTypePair_inner()
 {
-  if (verbose) {
-    std::cout << " * \"" << type_name<T>() << "\" vs \"" << type_name<U>()
-              << "\"\n";
-  }
   verifyBasicMath<T, U>();
 }
 
 template<class T, class U>
 void testTypePair(T, U)
 {
-  if (verbose) {
-    std::cout << "looking at \"" << type_name<T>() << "\" vs \""
-              << type_name<U>() << "\"\n";
-  }
   // try out both what was given, and all combinations of adding/removing
   // signedness to the types.
   testTypePair_inner<T, U>();
@@ -191,21 +156,10 @@ void testTypePair(T, U)
 
 TEST_CASE("all combinations of fundamental integer types")
 {
-  // see https://en.cppreference.com/w/cpp/language/types for a list
-  // of distinct types. I want to make sure every possible combination
-  // works as intended.
-  using fundamental_chars =
-    std::tuple<signed char, unsigned char, char, wchar_t, char16_t, char32_t>;
-  using fundamental_ints = std::tuple<short, int, long, long long>;
-
-  // combine them into a large collection of types
-  using all_fundamental =
-    decltype(std::tuple_cat(fundamental_chars{}, fundamental_ints{}));
-
   // create all combinations of types (unsigned/signed versions of each will be
   // created internally later on)
-  static_foreach(all_fundamental{}, [&](std::size_t i, auto dummy1) {
-    static_foreach(all_fundamental{}, [&](std::size_t j, auto dummy2) {
+  static_foreach(fundamental_types::all{}, [&](std::size_t i, auto dummy1) {
+    static_foreach(fundamental_types::all{}, [&](std::size_t j, auto dummy2) {
       testTypePair(dummy1, dummy2);
     });
   });
