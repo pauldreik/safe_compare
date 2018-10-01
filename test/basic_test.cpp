@@ -9,6 +9,7 @@
 
 #include "safe_compare/safe_compare.hpp"
 #include <array>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 
@@ -73,10 +74,12 @@ verifyAgainstHugeInteger(T a, U b)
         << +b;
     std::cout << "Studying " << oss.str() << '\n';
   }
+  CAPTURE(+a);
+  CAPTURE(+b);
   REQUIRE((sa < sb) == (A < B));
   REQUIRE((sa <= sb) == (A <= B));
   REQUIRE((sa > sb) == (A > B));
-  // REQUIRE((sa >= sb) == (A >= B));
+  REQUIRE((sa >= sb) == (A >= B));
 }
 
 /**
