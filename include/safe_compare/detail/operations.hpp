@@ -66,6 +66,10 @@ struct Correct
   }
 }; // struct correct
 
+// MSVC disable warnings for signed/unsigned
+#pragma warning(push)
+#pragma warning(disable : 4018)
+
 template<typename I1, typename I2>
 struct Naive
 {
@@ -76,6 +80,8 @@ struct Naive
   inline static bool cmp(LT, I1 a, I2 b) { return a < b; }
   inline static bool cmp(LE, I1 a, I2 b) { return a <= b; }
 }; // struct naive
+
+#pragma warning(pop)
 
 struct NullPolicy
 {
