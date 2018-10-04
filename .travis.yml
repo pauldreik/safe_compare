@@ -3,27 +3,24 @@
 #
 language: cpp
 
-matrix:
-  - os: linux
-    compiler: g++-7
-    env: COMPILER=g++-7
-    addons:
-      apt:
-        sources:
-          - ubuntu-toolchain-r-test
-        packages:
-          - g++-7
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-trusty-6.0
+    packages:
+      - clang-6.0
+      - g++-7
 
+matrix:
+  include:
   - os: linux
-    compiler: clang++-6.0
+    sudo: false
+    compiler: gcc
+    env: COMPILER=g++-7
+  - os: linux
+    compiler: clang
     env: COMPILER=clang++-6.0
-    addons:
-      apt:
-        packages:
-          - clang-6.0
-        sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-6.0
 
 script:
   - mkdir -p build
