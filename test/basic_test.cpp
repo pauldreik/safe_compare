@@ -5,7 +5,7 @@
  * dual license, pick your choice. Either Boost license 1.0, or GPL(v2 or later,
  * at your option).
  */
-#include <catch/catch.hpp>
+#include <catch.hpp>
 
 #include "safe_compare/safe_compare.hpp"
 #include <iomanip>
