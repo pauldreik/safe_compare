@@ -2,173 +2,21 @@
  * License: dual license, pick your choice. Either Boost license 1.0, or GPL(v2
  * or later, at your option).
  * by Paul Dreik 20180919
-*/
+ */
 #pragma once
-#include <cassert>
-#include <limits>
-#include <type_traits>
 
-#include "safe_compare/detail/detail.hpp"
+#include "detail/misusage_types.hpp"
+#include "safe_compare/detail/wrapped_integer.hpp"
 
 namespace safe_compare {
 
-template<class Integer,
-         std::enable_if_t<std::is_integral<Integer>::value, Integer> = 0>
-struct Value
-{
-  enum properties
-  {
-    is_signed = std::numeric_limits<Integer>::is_signed
-  };
-  Integer m_value;
-};
+inline namespace v1 {
 
-namespace detail {
-template<class Integer>
-std::make_unsigned_t<Integer>
-make_unsigned(Integer x)
-{
-  assert(x >= 0 && "internal programming error - call only on positive values");
-  return x;
-}
-}
-
-template<class Integer1, class Integer2>
-bool
-operator<(const Value<Integer1>& left, const Value<Integer2>& right)
-{
-  if (+Value<Integer1>::is_signed == +Value<Integer2>::is_signed) {
-    // both are signed, or both are unsigned. c++ default rules will work
-    // fine here.
-    return left.m_value < right.m_value;
-  }
-
-  if (Value<Integer1>::is_signed) {
-    // left is signed - right is unsigned. careful check needed.
-    return left.m_value < 0 ||
-           detail::make_unsigned(left.m_value) < right.m_value;
-  } else {
-    // left is unsigned - right is signed. careful check needed.
-    return right.m_value >= 0 &&
-           left.m_value < detail::make_unsigned(right.m_value);
-  }
-}
-
-template<class Integer1, class Integer2>
-bool
-operator<=(const Value<Integer1>& left, const Value<Integer2>& right)
-{
-  if (+Value<Integer1>::is_signed == +Value<Integer2>::is_signed) {
-    // both are signed, or both are unsigned. c++ default rules will work
-    // fine here.
-    return left.m_value <= right.m_value;
-  }
-
-  if (Value<Integer1>::is_signed) {
-    // left is signed - right is unsigned. careful check needed.
-    return left.m_value <= 0 ||
-           detail::make_unsigned(left.m_value) <= right.m_value;
-  } else {
-    // left is unsigned - right is signed. careful check needed.
-    return right.m_value >= 0 &&
-           left.m_value <= detail::make_unsigned(right.m_value);
-  }
-}
-
-template<class Integer1, class Integer2>
-bool
-operator>(const Value<Integer1>& left, const Value<Integer2>& right)
-{
-  if (+Value<Integer1>::is_signed == +Value<Integer2>::is_signed) {
-    // both are signed, or both are unsigned. c++ default rules will work
-    // fine here.
-    return left.m_value > right.m_value;
-  }
-
-  if (Value<Integer1>::is_signed) {
-    // left is signed - right is unsigned. careful check needed.
-    //1>1U
-    return left.m_value > 0 &&
-           detail::make_unsigned(left.m_value) > right.m_value;
-  } else {
-    // left is unsigned - right is signed. careful check needed.
-    //1U>1
-    return right.m_value < 0 ||
-           left.m_value > detail::make_unsigned(right.m_value);
-  }
-}
-
-
-template<class Integer1, class Integer2>
-bool
-operator>=(const Value<Integer1>& left, const Value<Integer2>& right)
-{
-  if (+Value<Integer1>::is_signed == +Value<Integer2>::is_signed) {
-    // both are signed, or both are unsigned. c++ default rules will work
-    // fine here.
-    return left.m_value >= right.m_value;
-  }
-
-  if (Value<Integer1>::is_signed) {
-    // left is signed - right is unsigned. careful check needed.
-    //1>=1U
-    return left.m_value >= 0 &&
-           detail::make_unsigned(left.m_value) >= right.m_value;
-  } else {
-    // left is unsigned - right is signed. careful check needed.
-    //1U>=1
-    return right.m_value < 0 ||
-           left.m_value >= detail::make_unsigned(right.m_value);
-  }
-}
-
-
-template<class Integer1, class Integer2>
-bool
-operator==(const Value<Integer1>& left, const Value<Integer2>& right)
-{
- if (+Value<Integer1>::is_signed == +Value<Integer2>::is_signed) {
-    // both are signed, or both are unsigned. c++ default rules will work
-    // fine here.
-  return left.m_value == right.m_value;
-  }
-
-  if (Value<Integer1>::is_signed) {
-    // left is signed - right is unsigned. careful check needed.
-    //1==1U
-    return left.m_value >= 0 &&
-           detail::make_unsigned(left.m_value) == right.m_value;
-  } else {
-    // left is unsigned - right is signed. careful check needed.
-    //1U==1
-    return right.m_value >= 0 &&
-           left.m_value == detail::make_unsigned(right.m_value);
-  }
-}
-template<class Integer1, class Integer2>
-bool
-operator!=(const Value<Integer1>& left, const Value<Integer2>& right)
-{
- if (+Value<Integer1>::is_signed == +Value<Integer2>::is_signed) {
-    // both are signed, or both are unsigned. c++ default rules will work
-    // fine here.
-  return left.m_value != right.m_value;
-  }
-
-  if (Value<Integer1>::is_signed) {
-    // left is signed - right is unsigned. careful check needed.
-    //1==1U
-    return left.m_value < 0 ||
-           detail::make_unsigned(left.m_value) != right.m_value;
-  } else {
-    // left is unsigned - right is signed. careful check needed.
-    //1U==1
-    return right.m_value < 0 ||
-           left.m_value != detail::make_unsigned(right.m_value);
-  }
-}
 /**
- * converts an integer into a wrapped integer
+ * converts an integer into a wrapped integer, returning an object
+ * that when compared to another wrapped integer will do the mathematically
+ * correct thing when compared. There will be no throwing or asserting, just
+ * the correct comparison.
  * @param x
  * @return
  */
@@ -179,19 +27,16 @@ make_safe(Integer x)
   return Value<Integer>{ x };
 }
 
-///prohibit using bool
-safe_compare::detail::illegal_use_of_bool_as_integer
-make_safe(bool) =delete;
+detail::illegal_use_of_bool_as_integer
+make_safe(bool) = delete;
 
-///prohibit using float
 safe_compare::detail::illegal_use_of_float_as_integer
-make_safe(float) =delete;
+make_safe(float) = delete;
 
-///prohibit using double
 safe_compare::detail::illegal_use_of_double_as_integer
-make_safe(double) =delete;
+make_safe(double) = delete;
 
-///prohibit using long double
 safe_compare::detail::illegal_use_of_long_double_as_integer
-make_safe(long double) =delete;
-} //namespace safe_compare
+make_safe(long double) = delete;
+} // namespace v1
+} // namespace safe_compare

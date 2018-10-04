@@ -11,10 +11,12 @@ cmake_minimum_required(VERSION 3.5)
 project(libsafecompare VERSION 0.0.0 LANGUAGES CXX)
 
 set(detail_header_files
-${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/detail/detail.hpp
+${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/detail/misusage_types.hpp
+${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/detail/wrapped_integer.hpp
 )
 set(header_files
 ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/safe_compare.hpp
+${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/safe_operations.hpp
 )
 
 set(target_name safe_compare)
