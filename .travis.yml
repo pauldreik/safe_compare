@@ -21,10 +21,16 @@ matrix:
   - os: linux
     compiler: clang
     env: COMPILER=clang++-6.0
+  - os: osx
+    compiler: clang
+  - os: osx
+    compiler: clang
+    osx_image: xcode10
 
 script:
   - mkdir -p build
   - cd build
-  - CXX=$COMPILER cmake ..
+  - if [ x"$COMPILER" != "x" ] ; then export CXX=$COMPILER ; fi
+  - cmake ..
   - make VERBOSE=1
   - make test
