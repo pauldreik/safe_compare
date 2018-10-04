@@ -6,11 +6,24 @@
 
 option(VERBOSE_UNITTESTS "enables more verbose printouts during unit tests" Off)
 
+
+
 set(source_files
+   basic_test.cpp
+   operations.cpp
    unittest_main.cpp
-   basic_test.cpp)
+   )
       
 add_executable(safe_compare_test ${source_files})
+
+# We need catch for unit testing. Do we already have it?
+INCLUDE(CheckIncludeFileCXX)
+CHECK_INCLUDE_FILE_CXX("catch.hpp" CATCH_FOUND)
+if(CATCH_FOUND)
+  # System wide install, manual intervention, or works by plain magic.
+else()
+  file(DOWNLOAD https://github.com/catchorg/Catch2/releases/download/v2.4.1/catch.hpp ${CMAKE_CURRENT_SOURCE_DIR}/catch.hpp)
+endif()
 
 if(VERBOSE_UNITTESTS)
    target_compile_definitions(safe_compare_test PRIVATE SAFE_COMPARE_VERBOSE_UNITTESTS=1)
@@ -18,18 +31,22 @@ else()
    target_compile_definitions(safe_compare_test PRIVATE SAFE_COMPARE_VERBOSE_UNITTESTS=0)
 endif()
 
-#we want to carry out the tests with a native type that can hold all
-#builtin integer types. on gcc and clang, there is the __int128 type
+# We want to carry out the tests with a native type that can hold all
+# builtin integer types. on gcc and clang, there is the __int128 type
 INCLUDE(CheckCXXSourceCompiles) 
 check_cxx_source_compiles("int main() { __int128 x{};}" HAVE_INT128_TYPE)
 if(HAVE_INT128_TYPE)
    target_compile_definitions(safe_compare_test PRIVATE HAVE_INT128_TYPE=1)
-endif()
-check_cxx_source_compiles("
- #include <boost/multiprecision/cpp_int.hpp> 
- int main() {boost::multiprecision::int128_t x{};}" HAVE_BOOST_MULTIPRECISION)
-if(HAVE_BOOST_MULTIPRECISION)
-   target_compile_definitions(safe_compare_test PRIVATE HAVE_BOOST_MULTIPRECISION=1)
+else()
+   #__int28 not found. let's use boost multiprecision instead.
+   # On windows, pass -DBOOST_ROOT="c:\path\to\boost\" to CMake to get this working.
+   find_package(Boost)
+   if(Boost_FOUND)
+      target_include_directories(safe_compare_test PRIVATE ${Boost_INCLUDE_DIR})
+      target_compile_definitions(safe_compare_test PRIVATE HAVE_BOOST_MULTIPRECISION=1)
+    else()
+      target_compile_definitions(safe_compare_test PRIVATE HAVE_BOOST_MULTIPRECISION=0)
+    endif()
 endif()
 
 target_link_libraries(safe_compare_test PUBLIC safe_compare)
