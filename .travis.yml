@@ -2,24 +2,32 @@
 # License: CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/
 #
 language: cpp
-compiler: gcc
 
-os: linux
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-7
+matrix:
+  - os: linux
+    compiler: g++-7
+    env: CXX=g++-7
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - g++-7
+
+  - os: linux
+    compiler: clang++-6.0
+    env: CXX=clang++-6.0
+    addons:
+      apt:
+        packages:
+          - clang-6.0
+        sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-6.0
 
 script:
-  - mkdir -p build/catch
+  - mkdir -p build
   - cd build
-  - curl https://raw.githubusercontent.com/catchorg/Catch2/v2.2.3/single_include/catch.hpp > catch/catch.hpp
-  - export CC=gcc-7
-  - export CXX=g++-7
-  - export CXXFLAGS="-I $(pwd)"
   - cmake ..
   - make VERBOSE=1
   - make test
-
