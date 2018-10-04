@@ -41,7 +41,7 @@ The library only supports builtin integer types (by design). As of C++17, these 
   * short
   * int
   * long
-  * long long.
+  * long long
 
 and unsigned/signed variants of those, where applicable.
 
@@ -56,7 +56,7 @@ The supported operations are
   * ```==```
   * ```!=```
 
-There are unit tests testing all combinations of types and operations listed above, on interesting values like min, max, zero, &plusmn;.
+There are unit tests testing all combinations of types and operations listed above, on interesting values like min, max, zero, &plusmn; 1.
 
 # Building and using the library
 This is a header only library. The library uses CMake. Here is how to build the unit tests on Linux.
