@@ -14,6 +14,9 @@
 
 #include "testsupport.hpp"
 
+// disable warnings from the Catch framework unsafe mix of int and bool
+#pragma warning(disable : 4805)
+
 TEST_CASE("demonstrate use with throw")
 {
   // demonstrates how to use a policy for what happens in case a naive
