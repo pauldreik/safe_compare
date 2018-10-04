@@ -1,12 +1,13 @@
 # safe_compare
 This is a C++14 library for safe C++ integer comparisons.
 
-[![Build Status](https://travis-ci.com/pauldreik/safe_compare.svg?branch=master)](https://travis-ci.com/pauldreik/safe_compare)
-[![Build status](https://ci.appveyor.com/api/projects/status/qfr7j9beo85y8jt5?svg=true)](https://ci.appveyor.com/project/pauldreik/safe-compare)
+Branch | Linux/Mac | Windows
+-------|-----------|--------
+master | [![Build Status](https://travis-ci.com/pauldreik/safe_compare.svg?branch=master)](https://travis-ci.com/pauldreik/safe_compare) | [![Build status](https://ci.appveyor.com/api/projects/status/qfr7j9beo85y8jt5?svg=true)](https://ci.appveyor.com/project/pauldreik/safe-compare)
 
 # Motivation
 The following C++ program is not mathematically correct.
-```
+```C++
 bool doit() {
     if(1U<-1) {
         return true;
@@ -19,7 +20,7 @@ Due to integer promotion rules, the -1 is converted to unsigned which (usually) 
 warning: comparison of integer expressions of different signedness: 'unsigned int' and 'int' [-Wsign-compare]
 ```
 You would manually need to fix this problem which is a bit tedious. This library is here to help you with that.
-```
+```C++
 #include "safe_compare/safe_compare.hpp"
 bool doit() {
     if(safe_compare::make_safe(1U)<safe_compare::make_safe(-1)) {
@@ -61,7 +62,7 @@ There are unit tests testing all combinations of types and operations listed abo
 
 # Building and using the library
 This is a header only library. The library uses CMake. Here is how to build the unit tests on Linux.
-```
+```sh
 mkdir build
 cd build
 cmake ..
