@@ -29,7 +29,7 @@ using Int128_t = boost::multiprecision::int128_t;
 #endif
 }
 
-namespace detail {
+namespace testdetail {
 
 /**
  * makes an interesting array of values, to trigger problematic situations
@@ -100,7 +100,7 @@ operateOnValueCombinations(Func f)
 {
   static_foreach(fundamental_types::all{}, [&](std::size_t i, auto dummy1) {
     static_foreach(fundamental_types::all{}, [&](std::size_t j, auto dummy2) {
-      detail::testTypePair(dummy1, dummy2, f);
+      testdetail::testTypePair(dummy1, dummy2, f);
     });
   });
 }

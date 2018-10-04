@@ -12,7 +12,7 @@
 #include <tuple>
 #include <utility>
 
-namespace detail {
+namespace foreach_detail {
 template<class Tup, class Func, std::size_t... Is>
 constexpr void
 static_foreach_impl(const Tup& t, Func&& f, std::index_sequence<Is...>)
@@ -31,6 +31,6 @@ constexpr void
 static_foreach(const std::tuple<T...>& t, Func&& f)
 {
   constexpr auto tuple_size = sizeof...(T);
-  detail::static_foreach_impl(
+  foreach_detail::static_foreach_impl(
     t, std::forward<Func>(f), std::make_index_sequence<tuple_size>{});
 }

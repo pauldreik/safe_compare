@@ -2,7 +2,10 @@
 
 #include <catch/catch.hpp>
 
+#include "safe_compare/aborting_operations.hpp"
 #include "safe_compare/safe_operations.hpp"
+#include "safe_compare/throwing_operations.hpp"
+
 #include "testsupport.hpp"
 
 TEST_CASE("demonstrate use with throw")
