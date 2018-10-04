@@ -12,11 +12,14 @@ project(libsafecompare VERSION 0.0.0 LANGUAGES CXX)
 
 set(detail_header_files
 ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/detail/misusage_types.hpp
+${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/detail/operations.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/detail/wrapped_integer.hpp
 )
 set(header_files
+${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/aborting_operations.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/safe_compare.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/safe_operations.hpp
+${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/throwing_operations.hpp
 )
 
 set(target_name safe_compare)
@@ -31,7 +34,7 @@ target_compile_definitions(${target_name}  INTERFACE)
 
 #for installation
 install(FILES ${header_files}        DESTINATION include/safe_compare)
-install(FILES ${detail_header_files} DESTINATION include/detail/safe_compare)
+install(FILES ${detail_header_files} DESTINATION include/safe_compare/detail)
 
 enable_testing()
 add_subdirectory(test/)
