@@ -19,7 +19,7 @@ add_executable(safe_compare_test ${source_files})
 # Visual studio gets problem C1128 for debug 64 bit builds.
 # see https://docs.microsoft.com/sv-se/cpp/error-messages/compiler-errors-1/fatal-error-c1128?view=vs-2017
 if(MSVC)
-   target_compile_options(safe_compare_test "/bigobj")
+   target_compile_options(safe_compare_test PRIVATE "/bigobj")
 endif()
 
 # We need catch for unit testing. Do we already have it?
