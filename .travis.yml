@@ -6,7 +6,7 @@ language: cpp
 matrix:
   - os: linux
     compiler: g++-7
-    env: CXX=g++-7
+    env: COMPILER=g++-7
     addons:
       apt:
         sources:
@@ -16,7 +16,7 @@ matrix:
 
   - os: linux
     compiler: clang++-6.0
-    env: CXX=clang++-6.0
+    env: COMPILER=clang++-6.0
     addons:
       apt:
         packages:
@@ -28,6 +28,6 @@ matrix:
 script:
   - mkdir -p build
   - cd build
-  - cmake ..
+  - CXX=$COMPILER cmake ..
   - make VERBOSE=1
   - make test
