@@ -1,0 +1,36 @@
+# By Paul Dreik 20181001
+#
+# This is mostly based on https://github.com/LearningByExample/ModernCppCI/blob/master/appveyor.yml
+# which is MIT licensed, by Juan Medina.
+#
+# Here are other files that could be good to look at:
+# https://david-grs.github.io/cpp-clang-travis-cmake-gtest-coveralls-appveyor/
+# https://github.com/rollbear/trompeloeil/blob/master/appveyor.yml
+# https://github.com/datastax/cpp-driver/blob/master/appveyor.yml
+
+# https://github.com/lefticus/cpp_starter_project/blob/master/appveyor.yml
+# https://github.com/catchorg/Catch2/blob/master/appveyor.yml
+
+version: "{branch} #{build}"
+
+image: Visual Studio 2017
+
+platform:
+  - Win32
+  - x64
+ 
+configuration:
+  - Release
+  - Debug
+
+before_build:
+  - cmake -H. -BBuild -A%PLATFORM% "-DBOOST_ROOT=C:\Libraries\boost_1_67_0"
+
+build:
+  project: Build\libsafecompare.sln
+  parallel: true                        # enable MSBuild parallel builds
+  verbosity: normal                     # MSBuild verbosity level {quiet|minimal|normal|detailed}
+
+test_script:
+  - cd Build
+  - ctest -V -j 2 -C %CONFIGURATION%
