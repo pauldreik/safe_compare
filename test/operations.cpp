@@ -1,6 +1,6 @@
 
 
-#include <catch/catch.hpp>
+#include <catch.hpp>
 
 #include "safe_compare/aborting_operations.hpp"
 #include "safe_compare/safe_operations.hpp"
