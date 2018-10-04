@@ -8,24 +8,14 @@
 #include <catch/catch.hpp>
 
 #include "safe_compare/safe_compare.hpp"
-#include <array>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 
 #include "fundamental_types.hpp"
 #include "static_for.hpp"
+#include "testsupport.hpp"
 #include "type_name_helper.hpp"
-
-#if HAVE_INT128_TYPE
-// will use native __int128 (works on clang and gcc, amd64)
-#elif HAVE_BOOST_MULTIPRECISION
-// use boost multiprecision
-#include <boost/multiprecision/cpp_int.hpp>
-#include <boost/multiprecision/cpp_int/limits.hpp>
-#else
-#error "no 128 bit integer types available"
-#endif
 
 namespace {
 // verbose printout of what happens
@@ -84,89 +74,16 @@ verifyAgainstHugeInteger(T a, U b)
   REQUIRE((sa != sb) == (A != B));
 }
 
-/**
- * makes an interesting array of values, to trigger problematic situations
- * @return
- */
-template<class T>
-constexpr std::array<const T, 5>
-makeInteresting()
-{
-  constexpr const T MinusOneIfPossible =
-    std::numeric_limits<T>::is_signed ? T{} - 1 : T{};
-  return { std::numeric_limits<T>::min(),
-           MinusOneIfPossible,
-           0,
-           1,
-           std::numeric_limits<T>::max() };
-}
-
-/**
- * for two integral types T and U, verify comparing them works as intended.
- * Internally T and U are also tested with their types swapped, so
- * there is no need to invoke this a second time with the template arguments
- * swapped.
- */
-template<class T, class U>
-void
-verifyBasicMath()
-{
-  static_assert(std::is_integral<T>::value, "a must be a basic integer type");
-  static_assert(std::is_integral<U>::value, "b must be a basic integer type");
-
-  // make a 128 bit integer type
-#if HAVE_INT128_TYPE
-  using Int128_t = __int128;
-#elif HAVE_BOOST_MULTIPRECISION
-  using Int128_t = boost::multiprecision::int128_t;
-#else
-#error "no 128 bit type available"
-#endif
-
-  if constexpr (verbose) {
-    std::ostringstream oss;
-    oss << CW << type_name<T>() << " compared to " << CW << type_name<U>()
-        << '\n';
-    INFO("Studying " << oss.str());
-  }
-
-  // make some interesting numbers and test them pairwise
-  constexpr const auto some_T = makeInteresting<T>();
-  constexpr const auto some_U = makeInteresting<U>();
-  for (const auto t : some_T) {
-    for (const auto u : some_U) {
-      verifyAgainstHugeInteger<Int128_t>(t, u);
-    }
-  }
-}
-
-template<class T, class U>
-void
-testTypePair_inner()
-{
-  verifyBasicMath<T, U>();
-}
-
-template<class T, class U>
-void testTypePair(T, U)
-{
-  // try out both what was given, and all combinations of adding/removing
-  // signedness to the types.
-  testTypePair_inner<T, U>();
-  testTypePair_inner<std::make_unsigned_t<T>, std::make_signed_t<U>>();
-  testTypePair_inner<std::make_unsigned_t<T>, std::make_unsigned_t<U>>();
-  testTypePair_inner<std::make_signed_t<T>, std::make_signed_t<U>>();
-  testTypePair_inner<std::make_signed_t<T>, std::make_unsigned_t<U>>();
-}
-
 TEST_CASE("all combinations of fundamental integer types")
 {
-  // create all combinations of types (unsigned/signed versions of each will be
-  // created internally later on)
-  static_foreach(fundamental_types::all{}, [&](std::size_t i, auto dummy1) {
-    static_foreach(fundamental_types::all{}, [&](std::size_t j, auto dummy2) {
-      testTypePair(dummy1, dummy2);
-    });
+  // Create all combinations of types, unsigned/signed versions of those.
+  // Then makes interesting values for each of the types and invokes
+  // the loop body with those values. This gives a lot of combinations,
+  // some of them mirrored and some of them with a and b with equal types
+  // and value. That is intentional, we do not want to miss out any relevant
+  // combination that may go wrong.
+  operateOnValueCombinations([](auto a, auto b) {
+    verifyAgainstHugeInteger<safe_compare_tests::Int128_t>(a, b);
   });
 }
 
