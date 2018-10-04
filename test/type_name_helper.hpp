@@ -42,6 +42,7 @@ type_name()
  */
 template<class T>
 constexpr std::string_view
-type_name(const T&) {
+type_name(const T&)
+{
   return type_name<T>();
 }

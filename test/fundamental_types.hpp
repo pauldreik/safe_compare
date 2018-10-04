@@ -9,17 +9,17 @@
  */
 #pragma once
 
-#include <tuple>
 #include <cstddef>
+#include <tuple>
 
-struct fundamental_types {
+struct fundamental_types
+{
   // see https://en.cppreference.com/w/cpp/language/types for a list
   // of distinct types.
   using fundamental_chars =
-      std::tuple<signed char, unsigned char, char, wchar_t, char16_t, char32_t>;
-    using fundamental_ints = std::tuple<short, int, long, long long>;
+    std::tuple<signed char, unsigned char, char, wchar_t, char16_t, char32_t>;
+  using fundamental_ints = std::tuple<short, int, long, long long>;
 
-    // combine them into a large collection of types
-    using all = decltype(std::tuple_cat(fundamental_chars{}, fundamental_ints{}));
+  // combine them into a large collection of types
+  using all = decltype(std::tuple_cat(fundamental_chars{}, fundamental_ints{}));
 };
-
