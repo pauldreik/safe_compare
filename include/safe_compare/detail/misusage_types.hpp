@@ -14,10 +14,14 @@ namespace safe_compare {
 inline namespace v1 {
 
 namespace detail {
-struct illegal_use_of_bool_as_integer;
-struct illegal_use_of_float_as_integer;
-struct illegal_use_of_double_as_integer;
-struct illegal_use_of_long_double_as_integer;
+struct illegal_use_of_bool_as_integer
+{};
+struct illegal_use_of_float_as_integer
+{};
+struct illegal_use_of_double_as_integer
+{};
+struct illegal_use_of_long_double_as_integer
+{};
 }
 }
 }
