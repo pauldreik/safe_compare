@@ -39,3 +39,5 @@ install(FILES ${detail_header_files} DESTINATION include/safe_compare/detail)
 enable_testing()
 add_subdirectory(test/)
 
+#for examples
+add_subdirectory(examples)
