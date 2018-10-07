@@ -1,4 +1,4 @@
-# CMake file for the examples
+# CMake file for the performance tests
 # License:
 # dual license, pick your choice. Either Boost license 1.0, or GPL(v2 or later,
 # at your option).

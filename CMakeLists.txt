@@ -39,5 +39,6 @@ install(FILES ${detail_header_files} DESTINATION include/safe_compare/detail)
 enable_testing()
 add_subdirectory(test/)
 
-#for examples
-add_subdirectory(examples)
+#for performance tests
+option(BUILD_PERFORMANCE_TESTS "enables the performance tests" Off)
+add_subdirectory(performance)
