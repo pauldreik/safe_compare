@@ -30,7 +30,9 @@ fi
 
 mkdir -p $builddir
 cd $builddir
-CXX="ccache g++" CXXFLAGS="-O$1" cmake .. 
+CXX="ccache g++" CXXFLAGS="-O$1" cmake .. \
+   -DBUILD_PERFORMANCE_TESTS=On \
+   -DBUILD_UNITTESTS=Off
 make -j8
 
 #execute all performance tests

@@ -36,9 +36,14 @@ target_compile_definitions(${target_name}  INTERFACE)
 install(FILES ${header_files}        DESTINATION include/safe_compare)
 install(FILES ${detail_header_files} DESTINATION include/safe_compare/detail)
 
-enable_testing()
-add_subdirectory(test/)
+option(BUILD_UNITTESTS "enables the unit tests" On)
+if(BUILD_UNITTESTS)
+   enable_testing()
+   add_subdirectory(test/)
+endif()
 
 #for performance tests
 option(BUILD_PERFORMANCE_TESTS "enables the performance tests" Off)
-add_subdirectory(performance)
+if(BUILD_PERFORMANCE_TESTS)
+   add_subdirectory(performance)
+endif()

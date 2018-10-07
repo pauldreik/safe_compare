@@ -16,6 +16,10 @@
 #include <random>
 #include <vector>
 
+// disable warnings for signed/unsigned
+#pragma warning(push)
+#pragma warning(disable : 4018)
+
 #include "safe_compare/safe_operations.hpp"
 #include "safe_compare/throwing_operations.hpp"
 
