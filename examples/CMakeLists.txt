@@ -9,11 +9,12 @@ set(source_files
    performance.cpp
    )
 
-
 #make several binaries which use different strategies
 foreach(METHOD plain;correct;throwing)
-foreach(TYPEA uint8;uint16;uint32;uint64)
-foreach(TYPEB uint8;uint16;uint32;uint64)
+#foreach(TYPEA uint8;uint16;uint32;uint64;int8;int16;int32;int64)
+foreach(TYPEA uint8;uint32;int8;int32)
+#foreach(TYPEB uint8;uint16;uint32;uint64;int8;int16;int32;int64)
+foreach(TYPEB uint8;uint32;int8;int32)
   set(name performance_${METHOD}_${TYPEA}_${TYPEB})
   add_executable(${name} ${source_files})
   target_compile_definitions(${name}  PRIVATE METHOD=${METHOD} STRMETHOD=\"${METHOD}\")

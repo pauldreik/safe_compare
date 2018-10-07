@@ -1,4 +1,12 @@
 #!/bin/sh
+# 
+# Compiles performance tests and executes them.
+# Analyze it with the parse_performance_test_results.sh script.
+#
+# License:
+# dual license, pick your choice. Either Boost license 1.0, or GPL(v2 or later,
+# at your option).
+# By Paul Dreik 20181007
 
 set -e
 

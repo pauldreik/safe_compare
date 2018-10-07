@@ -20,6 +20,10 @@
 #include "safe_compare/safe_operations.hpp"
 #include "safe_compare/throwing_operations.hpp"
 
+//make random data in range [0, max] - we do not want the throwing compare
+//to actually throw, since it is the fast path that is of interest and
+//benchmarking detecting an error vs not seeing it is irrelevant - correctness first!
+
 template<typename Int>
 std::vector<Int>
 makeRandomData(std::size_t N)
@@ -28,7 +32,7 @@ makeRandomData(std::size_t N)
   data.reserve(N);
   std::random_device rd{};
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<Int> dis(std::numeric_limits<Int>::min(),
+  std::uniform_int_distribution<Int> dis(Int{},
                                          std::numeric_limits<Int>::max());
 
   std::generate_n(std::back_inserter(data), N, [&]() { return dis(gen); });
@@ -94,6 +98,6 @@ countRandomPairs()
 int
 main()
 {
-  const std::size_t N = 5000;
+  const std::size_t N = 10000;
   std::cout << "count for " << STRTYPEA<< '<'<<STRTYPEB <<" :"<< countRandomPairs<TYPEA, TYPEB, N>() << '\n';
 }
