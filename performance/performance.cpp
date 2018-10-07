@@ -15,14 +15,14 @@
 #include <limits>
 #include <random>
 #include <vector>
-#include <cstdint>
 
 #include "safe_compare/safe_operations.hpp"
 #include "safe_compare/throwing_operations.hpp"
 
-//make random data in range [0, max] - we do not want the throwing compare
-//to actually throw, since it is the fast path that is of interest and
-//benchmarking detecting an error vs not seeing it is irrelevant - correctness first!
+// make random data in range [0, max] - we do not want the throwing compare
+// to actually throw, since it is the fast path that is of interest and
+// benchmarking detecting an error vs not seeing it is irrelevant - correctness
+// first!
 
 template<typename Int>
 std::vector<Int>
@@ -32,10 +32,23 @@ makeRandomData(std::size_t N)
   data.reserve(N);
   std::random_device rd{};
   std::mt19937 gen(rd());
+  // Visual Studio
+#if _MSC_VER
+  // Visual studio errors out with not accepting char, signed char, unsigned
+  // char, int8_t, and uint8_t for uniform_int_distribution
+  using Promoted = decltype(+Int{});
+  std::uniform_int_distribution<Promoted> dis(
+    Promoted{}, static_cast<Promoted>(std::numeric_limits<Int>::max()));
+  std::generate_n(
+    std::back_inserter(data), N, [&]() { return static_cast<Int>(dis(gen)); });
+#else
+  // c++ compliant variants (see http://eel.is/c++draft/rand.dist.uni.int)
   std::uniform_int_distribution<Int> dis(Int{},
                                          std::numeric_limits<Int>::max());
 
   std::generate_n(std::back_inserter(data), N, [&]() { return dis(gen); });
+#endif
+
   return data;
 }
 /*
@@ -54,11 +67,12 @@ makeRandomData(std::size_t N)
 #error "please define METHOD to one of plain, correct or throwing"
 #endif
 
-enum class Method {
+enum class Method
+{
   plain,
   correct,
   throwing,
-  current=METHOD, // <--from preprocessor macro
+  current = METHOD, // <--from preprocessor macro
 };
 
 template<typename T, typename U, std::size_t N>
@@ -73,12 +87,12 @@ countRandomPairs()
   bool cmp;
   for (const auto a : data1) {
     for (const auto b : data2) {
-      if constexpr(Method::current==Method::plain) {
-        cmp= a < b;
-      } else if constexpr(Method::current==Method::correct) {
-        cmp= safe_compare::CorrectCompare::lt(a,b);
-      } else if constexpr(Method::current==Method::throwing) {
-        cmp= safe_compare::ThrowingCompare::lt(a,b);
+      if constexpr (Method::current == Method::plain) {
+        cmp = a < b;
+      } else if constexpr (Method::current == Method::correct) {
+        cmp = safe_compare::CorrectCompare::lt(a, b);
+      } else if constexpr (Method::current == Method::throwing) {
+        cmp = safe_compare::ThrowingCompare::lt(a, b);
       }
       if (cmp) {
         ++count;
@@ -99,5 +113,6 @@ int
 main()
 {
   const std::size_t N = 10000;
-  std::cout << "count for " << STRTYPEA<< '<'<<STRTYPEB <<" :"<< countRandomPairs<TYPEA, TYPEB, N>() << '\n';
+  std::cout << "count for " << STRTYPEA << '<' << STRTYPEB << " :"
+            << countRandomPairs<TYPEA, TYPEB, N>() << '\n';
 }
