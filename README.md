@@ -60,6 +60,44 @@ The supported operations are
 
 There are unit tests testing all combinations of types and operations listed above, on interesting values like min, max, zero, &plusmn; 1.
 
+# Performance
+There is a simple performance test included which can be run with performance/run_performance_test.sh script. It will compile the performance test at different optimization levels and type combinations, then execute it to time the results. The performance is tested on vectors of random data (the number of elements N is 10000). 
+```C++
+  const auto data1 = makeRandomData<T>(N);
+  const auto data2 = makeRandomData<U>(N);
+
+  std::size_t count = 0;
+  bool cmp;
+  for (const auto a : data1) {
+    for (const auto b : data2) {
+      if constexpr(Method::current==Method::plain) {
+        cmp= a < b;
+      } else if constexpr(Method::current==Method::correct) {
+        cmp= safe_compare::CorrectCompare::lt(a,b);
+      } else if constexpr(Method::current==Method::throwing) {
+        cmp= safe_compare::ThrowingCompare::lt(a,b);
+      }
+      if (cmp) {
+        ++count;
+      }
+    }
+  }
+```
+The findings below come from running the benchmark with gcc 7.3 on an Intel i7-4771 CPU. 1x overhead means no overhead. 2x overhead means the same operation takes double the amount of time to complete compared to the reference.
+
+## Runtime performance for safe comparisons on types that hadn't needed it
+If comparing for instance int to long, the naive comparison is just fine. In this case, the safe_compare abstractions collapse down to no overhead already at optimization level O1 and above. That means you get compile time protection of correctness for free. This is beneficial in generic code or to proof against future refactoring.
+
+## Runtime performance for safe comparisons on data that do not need it
+If you are comparing say int32_t to uint32_t, you need safe compare. However, if you can guarantee your data to compare is always positive, the defective behaviour is not triggered so the naive comparison would be just fine. What is the price to pay for using safe_compare in that case?
+
+At optimization level -O3, the overhead compared to naive comparison is 1-11x depending on the data type. Presumably this is because the safe compare stops certain optimizations to kick in.
+
+The overhead of the throwing vs non-throwing safe compare is 0.5-4x depending on data type and optimization level.
+
+## Runtime performance for safe comparisons on data that *do* need it
+You can't compare the speed of a correct program to an incorrect one. If an incorrect program is allowed, we could just return constant false from the comparison and the program would be super fast.
+
 # Building and using the library
 This is a header only library. The library uses CMake. Here is how to build the unit tests on Linux.
 ```sh
