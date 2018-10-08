@@ -83,6 +83,9 @@ struct Naive
 
 #pragma warning(pop)
 
+/**
+ * This policy does nothing - no abort, assert, throw.
+ */
 struct NullPolicy
 {
   template<typename Tag, typename I1, typename I2>
@@ -90,9 +93,48 @@ struct NullPolicy
   {}
 };
 
+/**
+ * base class for comparing naive and correct results, and if there is a
+ * difference forward to Policy::report for actions on what to do.
+ */
 template<typename Policy>
-struct Dispatcher
+struct SwitcherBase
 {
+  // overload when types are equal - no need to do anything.
+  template<typename I1, /* typename I2, */ typename Tag>
+  inline static bool cmp(Tag, I1 a, I1 b)
+  {
+    return Naive<I1, I1>::cmp(Tag{}, a, b);
+  }
+
+  template<typename I1, typename I2, typename Tag>
+  inline static bool cmp(Tag, I1 a, I2 b)
+  {
+    const bool naive = Naive<I1, I2>::cmp(Tag{}, a, b);
+    const bool correct = Correct<I1, I2>::cmp(Tag{}, a, b);
+    if (naive != correct) {
+      Policy::report(Tag{}, a, b, naive, correct);
+    }
+    return correct;
+  }
+};
+
+/**
+ * for performance, without safety.
+ */
+struct UnsafeBase
+{
+  template<typename I1, typename I2, typename Tag>
+  inline static bool cmp(Tag, I1 a, I2 b)
+  {
+    return Naive<I1, I2>::cmp(Tag{}, a, b);
+  }
+};
+
+template<typename Base>
+struct Dispatcher : private Base
+{
+  using Base::cmp;
   template<typename I1, typename I2>
   static bool eq(I1 a, I2 b)
   {
@@ -122,25 +164,6 @@ struct Dispatcher
   static bool le(I1 a, I2 b)
   {
     return cmp(LE{}, a, b);
-  }
-
-private:
-  // overload when types are equal - no need to do anything.
-  template<typename I1, /* typename I2, */ typename Tag>
-  inline static bool cmp(Tag, I1 a, I1 b)
-  {
-    return Naive<I1, I1>::cmp(Tag{}, a, b);
-  }
-
-  template<typename I1, typename I2, typename Tag>
-  inline static bool cmp(Tag, I1 a, I2 b)
-  {
-    const bool naive = Naive<I1, I2>::cmp(Tag{}, a, b);
-    const bool correct = Correct<I1, I2>::cmp(Tag{}, a, b);
-    if (naive != correct) {
-      Policy::report(Tag{}, a, b, naive, correct);
-    }
-    return correct;
   }
 }; // struct Dispatcher
 

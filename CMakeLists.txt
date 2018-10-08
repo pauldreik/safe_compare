@@ -20,6 +20,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/aborting_operations.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/safe_compare.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/safe_operations.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/throwing_operations.hpp
+${CMAKE_CURRENT_SOURCE_DIR}/include/safe_compare/unsafe_operations.hpp
 )
 
 set(target_name safe_compare)

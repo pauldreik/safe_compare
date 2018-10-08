@@ -38,6 +38,7 @@ struct ThrowingPolicy
  * gives a type whose static methods will throw in case a naive comparison
  * had given the incorrect answer.
  */
-using ThrowingCompare = detail::Dispatcher<detail::ThrowingPolicy>;
+using ThrowingCompare =
+  detail::Dispatcher<detail::SwitcherBase<detail::ThrowingPolicy>>;
 } // namespace v1
 } // namespace safe_compare

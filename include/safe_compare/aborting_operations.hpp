@@ -37,6 +37,7 @@ struct AbortingPolicy
  * gives a type whose static methods will abort in case a naive comparison
  * had given the incorrect answer. Useful for smoking out bugs during testing.
  */
-using AbortingCompare = detail::Dispatcher<detail::AbortingPolicy>;
+using AbortingCompare =
+  detail::Dispatcher<detail::SwitcherBase<detail::AbortingPolicy>>;
 } // namespace v1
 } // namespace safe_compare

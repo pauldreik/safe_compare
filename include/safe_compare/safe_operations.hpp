@@ -18,6 +18,7 @@ inline namespace v1 {
  * gives a type whose static methods will give the correct answer, without
  * any error reporting at all.
  */
-using CorrectCompare = detail::Dispatcher<detail::NullPolicy>;
+using CorrectCompare =
+  detail::Dispatcher<detail::SwitcherBase<detail::NullPolicy>>;
 } // namespace v1
 } // namespace safe_compare

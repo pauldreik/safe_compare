@@ -11,6 +11,7 @@
 #include "safe_compare/aborting_operations.hpp"
 #include "safe_compare/safe_operations.hpp"
 #include "safe_compare/throwing_operations.hpp"
+#include "safe_compare/unsafe_operations.hpp"
 
 #include "testsupport.hpp"
 
@@ -55,6 +56,8 @@ TEST_CASE("demonstrate use with abort")
     }                                                                          \
     /* require correct compare to be, wait for it...  correct. */              \
     REQUIRE(safe_compare::CorrectCompare::opname(a, b) == correct);            \
+    /* require UnsafeCompare to be equal to naive */                           \
+    REQUIRE(safe_compare::UnsafeCompare::opname(a, b) == naive);               \
   } while (0);
 
 TEST_CASE("check throw operations")
