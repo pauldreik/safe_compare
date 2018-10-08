@@ -1,9 +1,9 @@
 # safe_compare
 This is a C++14 library for safe C++ integer comparisons.
 
-Branch | Linux/Mac | Windows
--------|-----------|--------
-master | [![Build Status](https://travis-ci.com/pauldreik/safe_compare.svg?branch=master)](https://travis-ci.com/pauldreik/safe_compare) | [![Build status](https://ci.appveyor.com/api/projects/status/qfr7j9beo85y8jt5?svg=true)](https://ci.appveyor.com/project/pauldreik/safe-compare)
+Branch | Linux/Mac | Windows | Quality
+-------|-----------|---------|--------
+master | [![Build Status](https://travis-ci.com/pauldreik/safe_compare.svg?branch=master)](https://travis-ci.com/pauldreik/safe_compare) | [![Build status](https://ci.appveyor.com/api/projects/status/qfr7j9beo85y8jt5?svg=true)](https://ci.appveyor.com/project/pauldreik/safe-compare) | [![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/pauldreik/safe_compare.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/pauldreik/safe_compare/context:cpp)
 
 # Motivation
 The following C++ program is not mathematically correct.
