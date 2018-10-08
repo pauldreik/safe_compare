@@ -61,6 +61,8 @@ The supported operations are
 There are unit tests testing all combinations of types and operations listed above, on interesting values like min, max, zero, &plusmn; 1.
 
 # Performance
+The optimizer will remove the abstractions, making the code as efficient as would be by hand writing comparisons. For a demonstration that all the abstractions are easily removed by the optimizer, see this [godbolted example](https://godbolt.org/z/2v5Lmy). Even throw statements are completely removed for type combinations where they never could be executed.
+
 There is a simple performance test included which can be run with performance/run_performance_test.sh script. It will compile the performance test at different optimization levels and type combinations, then execute it to time the results. The performance is tested on vectors of random data (the number of elements N is 10000). 
 ```C++
   const auto data1 = makeRandomData<T>(N);
