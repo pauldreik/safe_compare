@@ -24,7 +24,7 @@ fi
 IPATH=.
 
 #strip this path from the given includes
-pathtostrip=$(pwd)/include/
+pathtostrip=$(pwd)/
 
 #given a file $1, lists which non-system header it depends on
 #into the deps file, on a format recognized by gnu tsort.
