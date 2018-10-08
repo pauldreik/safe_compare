@@ -31,7 +31,7 @@ pathtostrip=$(pwd)/
 depends_on() {
 strippedfilename=$(echo $1 | sed -e "s@$pathtostrip\(.*\)@\1@g")
 echo "#include \"$strippedfilename\"" | \
-g++ -MM -I $IPATH -E - | \
+g++ -std=c++1y -MM -I $IPATH -E - | \
 tr -d '\\' | \
 tr '\n' ' ' | \
 xargs -n1 echo $strippedfilename >>deps 
@@ -55,7 +55,7 @@ for f in $(cat deps.tmp) ; do
 done
 
 #make sure the file is ok, by compiling it
-g++ -c amalgated.hpp -o /dev/null
+g++ -std=c++1y -c amalgated.hpp -o /dev/null
 
 #assemble the complete file
 mv amalgated.hpp amalgated.hpp.orig
