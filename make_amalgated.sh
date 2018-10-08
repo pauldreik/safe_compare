@@ -17,6 +17,10 @@
 set -e
 
 #we expect to be executed in the include/ folder.
+if [ ! -d safe_compare ] ; then
+  echo "expected to be executed in the include/ folder"
+  exit 1
+fi
 IPATH=.
 
 #strip this path from the given includes
