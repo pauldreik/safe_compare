@@ -40,7 +40,7 @@ install(FILES ${detail_header_files} DESTINATION include/safe_compare/detail)
 # contains spaces.
 if(UNIX)
    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/amalgated.hpp
-                      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/make_amalgated.sh ${detail_header_files} ${header_files}
+                      COMMAND CXX=${CMAKE_CXX_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/make_amalgated.sh ${detail_header_files} ${header_files}
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
                       COMMENT "generating amalgated source"
                       DEPENDS  ${detail_header_files} ${header_files})
