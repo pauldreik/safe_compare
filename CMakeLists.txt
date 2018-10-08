@@ -53,16 +53,22 @@ endif()
 
 
 
+#unit tests (on by default)
 option(BUILD_UNITTESTS "enables the unit tests" On)
 if(BUILD_UNITTESTS)
    enable_testing()
    add_subdirectory(test/)
 endif()
 
-#for performance tests
+#performance tests (off by default, since they take a long time to build)
 option(BUILD_PERFORMANCE_TESTS "enables the performance tests" Off)
 if(BUILD_PERFORMANCE_TESTS)
    add_subdirectory(performance)
 endif()
 
+#examples
+option(BUILD_EXAMPLES "enables building the examples" On)
+if(BUILD_EXAMPLES)
+   add_subdirectory(examples)
+endif()
 
