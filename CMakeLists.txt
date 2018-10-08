@@ -42,17 +42,17 @@ install(FILES ${detail_header_files} DESTINATION include/safe_compare/detail)
 if(CMAKE_HOST_APPLE)
    # mac os x misses the "tac" command so the shell script would fail.
 elseif(UNIX)
-   # hopefully linux.
+   # Hopefully linux. Note, does not work well with ccache.
    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/amalgated.hpp
                       COMMAND CXX=${CMAKE_CXX_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/make_amalgated.sh ${detail_header_files} ${header_files}
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
                       COMMENT "generating amalgated source"
                       DEPENDS  ${detail_header_files} ${header_files})
-   add_custom_target(
-     amalgated ALL
-     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/include/amalgated.hpp )
+   add_custom_target( amalgated
+                      DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/include/amalgated.hpp )
    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/amalgated.hpp
-           DESTINATION include/safe_compare)     
+           DESTINATION include/safe_compare)    
+
 endif()
 
 

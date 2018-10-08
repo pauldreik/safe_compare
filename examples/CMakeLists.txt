@@ -4,7 +4,7 @@
 # at your option).
 # By Paul Dreik 20181008
 
-set(sources "01_basic_use;02_function_syntax;")
+set(sources "01_basic_use;02_function_syntax;03_audit;")
 
 foreach(name ${sources})
   add_executable(${name} ${name})
