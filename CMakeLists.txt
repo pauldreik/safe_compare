@@ -37,8 +37,11 @@ install(FILES ${header_files}        DESTINATION include/safe_compare)
 install(FILES ${detail_header_files} DESTINATION include/safe_compare/detail)
 
 # For creating an amalgated source. This will probably break in case the path
-# contains spaces.
-if(UNIX)
+# contains spaces. It only works on linux for now.
+if(CMAKE_HOST_APPLE)
+   # mac os x misses the "tac" command so the shell script would fail.
+elseif(UNIX)
+   # hopefully linux.
    add_custom_command(OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/include/amalgated.hpp
                       COMMAND CXX=${CMAKE_CXX_COMPILER} ${CMAKE_CURRENT_SOURCE_DIR}/make_amalgated.sh ${detail_header_files} ${header_files}
                       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include
